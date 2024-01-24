@@ -49,7 +49,7 @@
   --border-col: #A78A7F;
   --shimmer: #BF4342;
   --moca: #735751;
-  --smoke: #F9F6F0;
+  --moss: #4F7D6B;
 }
 
 
@@ -70,7 +70,15 @@ body {
   margin: 0;
   background-color: var(--almond)
 }
-
+.help {
+  position: absolute;
+  bottom:2vh;
+  right:0vh;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--moca);
+}
 .info {
   display: flex;
   font-size: large;
@@ -148,5 +156,5 @@ body {
   width: 10vmin;
   height: 10vmin;
   border-radius: 50%;
-  border: 2vmin solid var(--smoke);
+  border: 2vmin solid var(--moss);
 }

@@ -10,7 +10,7 @@ httpServer.listen(8081, () => {
 });
 
 wss.on('error', (error) => {
-    console.error('WebSocket Server Error:', error);
+    console.error('Server Error:', error);
   });
   function logConnectedClients() {
     console.log('Currently connected clients:');
@@ -19,65 +19,89 @@ wss.on('error', (error) => {
     });
   }
 
+  let clientIDCounter=0;
   const clientConnections = {};
-  let clientIDsWaitingConnection = new Set();
-  let opponentMap = new Map();
+  let clientIDsWaitingConnection = [];
+  const opponents ={}
 
   function matchclients(clientID){
-    clientIDsWaitingConnection.add(clientID)
-    if(clientIDsWaitingConnection.size < 2) {
-        console.log('waiting for another client')
+    clientIDsWaitingConnection.push(clientID)
+    if(clientIDsWaitingConnection.length < 2) {
+        return
     };
 
-    const clientID1 = clientIDsWaitingConnection.values().next().value
-    const clientID2 = clientIDsWaitingConnection.values().next().value
-    clientIDsWaitingConnection.delete(clientID1)
-    clientIDsWaitingConnection.delete(clientID2)
-    opponentMap.set(clientID1, clientID2)   
-    opponentMap.set(clientID2, clientID1)
+    const clientID1 = clientIDsWaitingConnection.shift()
+    const clientID2 = clientIDsWaitingConnection.shift()
+    //opponets gets matche with each other
+    opponents[clientID1] = clientID2;
+    opponents[clientID2] = clientID1;
 
     clientConnections[clientID1].send(JSON.stringify({
         method: 'join',
         symbol: 'X',
         turn:'X',
-        message: 'You have been matched with ' + clientID2
+        message: 'You have been matched with player ' + clientID2
     }))
     clientConnections[clientID2].send(JSON.stringify({
         method: 'join',
         symbol: 'O',
-        turn:'O',
-        message: 'You have been matched with ' + clientID1
+        turn:'X',
+        message: 'You have been matched with player ' + clientID1
     }))
   }
 
+  function handleMove(result, clientID){
+    const opponentClientID = opponents[clientID];
+    [clientID, opponentClientID].forEach((cID) => {
+        clientConnections[cID].send(JSON.stringify({
+            method: 'update',
+            turn: result.symbol === 'X' ? 'O' : 'X',
+            cellGrid: result.cellGrid
+        }))
+    })
+}
+  function closeClient(connection, clientID){
+      connection.close();
 
+  }
+
+function createClientID() {
+     clientIDCounter++
+     return clientIDCounter
+}
+
+
+//server wss connection
 wss.on('connection', (connection) => {
-    const clientID = connection._socket.remoteAddress;
+    const clientID = createClientID();
+    //const clientID = connection._socket.remoteAddress;
     clientConnections[clientID] = connection;
-    matchclients(clientID)
 
+       //connection sends message to client console.log(`New client connected. Total connected clients: ${wss.clients.size}`);
+       logConnectedClients();
 
-
-
-    //connection sends message to client
-    // console.log(`New client connected. Total connected clients: ${wss.clients.size}`);
-    // logConnectedClients();
-    // const msg = JSON.stringify({
-    //     message: 'Welcome to the Tic Tac Toe Game, please wait for another player to connect'
-    // })
-    //connection.send(msg);
+       const startMsg = JSON.stringify({
+           method: 'welcome',
+           connections: wss.clients.size,
+           message: 'Welcome. Searching opponent...'
+       })
+       connection.send(startMsg)
+       matchclients(clientID)
+ 
     //connection receives message from client
     connection.on('message', (message) => {
         const result = JSON.parse(message)
-        console.log('Received message:', result);
-       
+        if (result.method === 'move') {
+            handleMove(result, clientID)
+        }       
+    })
+    connection.on('close', () => {
+        closeClient(connection, clientID)
+        console.log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size}`);
+        logConnectedClients();
     })
 })
 
-wss.on('close', () => {
-    console.log(`Client disconnected. Total connected clients: ${wss.clients.size}`);
-    logConnectedClients();
-})
 const normalizePort = (val) => {
         const port = parseInt(val, 10);
         if(isNaN(port)){

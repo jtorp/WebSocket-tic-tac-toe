@@ -1,3 +1,7 @@
+const colors = require('colors');
+const log = console.log;
+
+
 const http = require('http');
 const WebSocket = require('ws');
 const app = require('./game');
@@ -13,9 +17,9 @@ wss.on('error', (error) => {
     console.error('Server Error:', error);
   });
   function logConnectedClients() {
-    console.log('Currently connected clients:');
+    log('Currently connected clients:' .bgBlue);
     wss.clients.forEach((client) => {
-      console.log(`Client ID: ${client._socket.remoteAddress}`);
+      console.log(`Client ID: ${client._socket.remoteAddress}`. bgBlue);
     });
   }
 
@@ -97,7 +101,7 @@ wss.on('connection', (connection) => {
     })
     connection.on('close', () => {
         closeClient(connection, clientID)
-        console.log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size}`);
+        log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size} `.bgRed);
         logConnectedClients();
     })
 })

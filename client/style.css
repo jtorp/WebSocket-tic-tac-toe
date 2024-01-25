@@ -46,7 +46,7 @@
 :root {
   --cell-size: min(20vh, 20vw);
   --almond: #e7d7c1;
-  --border-col: #A78A7F;
+  --latte: #A78A7F;
   --shimmer: #BF4342;
   --moca: #735751;
   --moss: #4F7D6B;
@@ -82,7 +82,7 @@ body {
 .info {
   display: flex;
   font-size: large;
-  color: var(--moca);
+  color: var(--latte);
   font-size: 18px;
   text-align: center;
   padding: 20px;
@@ -94,8 +94,8 @@ body {
 }
 
 .tracking-out-expand {
-  -webkit-animation: tracking-out-expand 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s infinite both;
-  animation: tracking-out-expand 1.5s cubic-bezier(0.250, 0.460, 0.450, 0.940) 1s infinite both;
+  -webkit-animation: tracking-out-expand 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s infinite both;
+  animation: tracking-out-expand 2s cubic-bezier(0.250, 0.460, 0.450, 0.940) 2s infinite both;
 }
 
 .grid {
@@ -103,7 +103,7 @@ body {
   grid-template-columns: repeat(3, 20vmin);
   grid-template-rows: repeat(3, 20vmin);
   gap: 1vmin;
-  background-color: var(--border-col);
+  background-color: var(--latte);
 }
 
 .cell {

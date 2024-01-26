@@ -2,7 +2,6 @@ let ws = new WebSocket('ws://localhost:8081');
 let symbol = null;
 let turn = null;
 let isGameActive = false;
-let serverMsg = '';
 let cellsGrid = [
     '', '', '',
     '', '', '',
@@ -11,19 +10,21 @@ let cellsGrid = [
 
 const wsMsg = document.getElementById('wsMessage');
 const cells = document.querySelectorAll('.cell');
-const players = document.getElementById('players');
-
+const player = document.getElementById('player');
+const refresh = document.getElementById('refresh');
 
 ws.onmessage = (message) => {
     const response = JSON.parse(message.data);
     if (response.method === 'welcome') {
-        players.textContent = `Players connected: ${response.connections}`
+        // player.textContent = `player connected: ${response.connections}`
         wsMsg.textContent = response.message
     }
 
     if (response.method === 'join') {
         symbol = response.symbol;
         turn = response.turn;
+        player.textContent = `${response.symbol}`
+        player.classList.add('controls')
         isGameActive = symbol === turn;
         updateMessage();
     }
@@ -34,13 +35,26 @@ ws.onmessage = (message) => {
         updateMessage();
         updateGrid();
     }
-}
-function updateMessage() {
-    if (symbol === turn) {
-        wsMsg.textContent = 'Your Move';
-    } else {
-        wsMsg.textContent = `Awaiting ${turn}'s turn`;
+    if (response.method === 'result') {
+        cellsGrid = response.cellGrid
+        updateGrid();
+        isGameActive = false;
+        setTimeout(() => {
+            wsMsg.textContent = response.message;
+            confirm(`${response.message} \n Would you like to play again?`) ? startOver() : '';
+        }, 300)
+        
     }
+    if (response.method === 'left') {
+        isGameActive = symbol === turn;
+        setTimeout(() => {
+            wsMsg.textContent = response.message
+        }, 200)
+    }
+}
+
+function updateMessage() {
+    wsMsg.textContent = symbol === turn ? 'Your Move' : `Awaiting ${turn}'s turn`;
 }
 
 function updateGrid() {
@@ -58,12 +72,10 @@ cells.forEach((cell, index) => {
 
 function makeMove(cell, index) {
     if (!isGameActive || cellsGrid[index] !== '') return;
-
     isGameActive = false;
     cell.classList.add(symbol);
     cellsGrid[index] = symbol;
 
-    //tell server
     ws.send(JSON.stringify({
         'method': 'move',
         'symbol': symbol,
@@ -71,3 +83,9 @@ function makeMove(cell, index) {
     }))
 
 }
+
+function startOver() {
+    window.location.reload();
+}
+
+refresh.addEventListener('click', startOver)

@@ -1,3 +1,8 @@
+/*
+ TODO:
+ check for ws close or timeout if the opponent doesn't respond
+
+*/
 const colors = require('colors');
 const log = console.log;
 
@@ -17,15 +22,6 @@ const winningCombinations = [
     [2, 4, 6],
 ];
 
-function initializeEmptyGrid() {
-    // Implement your logic to create and return an empty grid
-    // For example, if it's a Tic-Tac-Toe game with a 3x3 grid:
-    return ['', '', '',
-        '', '', '',
-        '', '', ''
-    ];
-}
-
 const http = require('http');
 const WebSocket = require('ws');
 const app = require('./game');
@@ -36,9 +32,6 @@ httpServer.listen(8081, () => {
 });
 
 
-/*
- GLOBAL VARIABLES
-*/
 let clientIDCounter = 0;
 const clientConnections = {};
 let clientIDsWaitingConnection = [];
@@ -125,7 +118,7 @@ function checkForWin(cellGrid) {
     })
 }
 function checkForDraw(cellGrid) {
-    return cellGrid.every(cell =>  cell === 'X' || cell === 'O')
+    return cellGrid.every(cell => cell === 'X' || cell === 'O')
 
 }
 wss.on('connection', (connection) => {
@@ -138,7 +131,7 @@ wss.on('connection', (connection) => {
     const startMsg = JSON.stringify({
         method: 'welcome',
         connections: wss.clients.size,
-        message: 'Welcome. Searching opponent...'
+        message: 'Searching opponent...'
     })
     connection.send(startMsg)
     matchclients(clientID)
@@ -175,11 +168,10 @@ function closeClient(connection, clientID) {
         const opponentClientID = opponents[clientID];
         clientConnections[opponentClientID].send(JSON.stringify({
             method: 'left',
-            message: `Your opponent has left the game`,
+            message: `Your opponent has left the game`
         }))
     }
 }
-
 
 const normalizePort = (val) => {
     const port = parseInt(val, 10);

@@ -1,61 +1,110 @@
 const colors = require('colors');
 const log = console.log;
 
+const winningCombinations = [
+    // Rows
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+
+    // Columns
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+
+    // Diagonals
+    [0, 4, 8],
+    [2, 4, 6],
+];
+
+function initializeEmptyGrid() {
+    // Implement your logic to create and return an empty grid
+    // For example, if it's a Tic-Tac-Toe game with a 3x3 grid:
+    return ['', '', '',
+        '', '', '',
+        '', '', ''
+    ];
+}
 
 const http = require('http');
 const WebSocket = require('ws');
 const app = require('./game');
-
-
 const httpServer = http.createServer();
 const wss = new WebSocket.Server({ server: httpServer, clientTracking: true });
 httpServer.listen(8081, () => {
     console.log('HTTP Server listening on port 8081');
 });
 
+
+/*
+ GLOBAL VARIABLES
+*/
+let clientIDCounter = 0;
+const clientConnections = {};
+let clientIDsWaitingConnection = [];
+const opponents = {}
+
+
 wss.on('error', (error) => {
     console.error('Server Error:', error);
-  });
-  function logConnectedClients() {
-    log('Currently connected clients:' .bgBlue);
+});
+function logConnectedClients() {
+    log('Currently connected clients:'.bgBlue);
     wss.clients.forEach((client) => {
-      console.log(`Client ID: ${client._socket.remoteAddress}`. bgBlue);
+        console.log(`Client ID: ${client._socket.remoteAddress}`.bgBlue);
     });
-  }
+}
 
-  let clientIDCounter=0;
-  const clientConnections = {};
-  let clientIDsWaitingConnection = [];
-  const opponents ={}
 
-  function matchclients(clientID){
+
+function matchclients(clientID) {
     clientIDsWaitingConnection.push(clientID)
-    if(clientIDsWaitingConnection.length < 2) {
+    if (clientIDsWaitingConnection.length < 2) {
         return
     };
-
     const clientID1 = clientIDsWaitingConnection.shift()
     const clientID2 = clientIDsWaitingConnection.shift()
-    //opponets gets matche with each other
     opponents[clientID1] = clientID2;
     opponents[clientID2] = clientID1;
 
     clientConnections[clientID1].send(JSON.stringify({
         method: 'join',
         symbol: 'X',
-        turn:'X',
+        turn: 'X',
         message: 'You have been matched with player ' + clientID2
     }))
     clientConnections[clientID2].send(JSON.stringify({
         method: 'join',
         symbol: 'O',
-        turn:'X',
+        turn: 'X',
         message: 'You have been matched with player ' + clientID1
     }))
-  }
+}
 
-  function handleMove(result, clientID){
+function handleMove(result, clientID) {
     const opponentClientID = opponents[clientID];
+
+    if (checkForWin(result.cellGrid)) {
+        [clientID, opponentClientID].forEach((cID) => {
+            clientConnections[cID].send(JSON.stringify({
+                method: 'result',
+                message: `${result.symbol} won!`,
+                cellGrid: result.cellGrid
+            }))
+        })
+        return
+    }
+    if (checkForDraw(result.cellGrid)) {
+        [clientID, opponentClientID].forEach((cID) => {
+            clientConnections[cID].send(JSON.stringify({
+                method: 'result',
+                message: `It's a draw!`,
+                cellGrid: result.cellGrid
+            }))
+        })
+        return
+    }
+
     [clientID, opponentClientID].forEach((cID) => {
         clientConnections[cID].send(JSON.stringify({
             method: 'update',
@@ -64,57 +113,83 @@ wss.on('error', (error) => {
         }))
     })
 }
-  function closeClient(connection, clientID){
-      connection.close();
-
-  }
-
 function createClientID() {
-     clientIDCounter++
-     return clientIDCounter
+    clientIDCounter++
+    return clientIDCounter
 }
 
+function checkForWin(cellGrid) {
+    return winningCombinations.some(combination => {
+        const [winningCell1, winningCell2, winningCell3] = combination;
+        return cellGrid[winningCell1] !== '' && cellGrid[winningCell1] === cellGrid[winningCell2] && cellGrid[winningCell1] === cellGrid[winningCell3]
+    })
+}
+function checkForDraw(cellGrid) {
+    return cellGrid.every(cell =>  cell === 'X' || cell === 'O')
 
-//server wss connection
+}
 wss.on('connection', (connection) => {
     const clientID = createClientID();
     //const clientID = connection._socket.remoteAddress;
     clientConnections[clientID] = connection;
+    //connection sends message to client console.log(`New client connected. Total connected clients: ${wss.clients.size}`);
+    logConnectedClients();
 
-       //connection sends message to client console.log(`New client connected. Total connected clients: ${wss.clients.size}`);
-       logConnectedClients();
+    const startMsg = JSON.stringify({
+        method: 'welcome',
+        connections: wss.clients.size,
+        message: 'Welcome. Searching opponent...'
+    })
+    connection.send(startMsg)
+    matchclients(clientID)
 
-       const startMsg = JSON.stringify({
-           method: 'welcome',
-           connections: wss.clients.size,
-           message: 'Welcome. Searching opponent...'
-       })
-       connection.send(startMsg)
-       matchclients(clientID)
- 
     //connection receives message from client
     connection.on('message', (message) => {
         const result = JSON.parse(message)
         if (result.method === 'move') {
             handleMove(result, clientID)
-        }       
+        }
     })
     connection.on('close', () => {
         closeClient(connection, clientID)
         log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size} `.bgRed);
         logConnectedClients();
     })
+
+
+
 })
 
+function closeClient(connection, clientID) {
+    connection.close();
+    //find out which player disconnected
+    const disconnectedClient = clientIDsWaitingConnection.some(
+        unmatchedClientID => unmatchedClientID === clientID);
+    //if true delete clientID from clientIDsWaitingConnection
+    if (disconnectedClient) {
+        clientIDsWaitingConnection = clientIDsWaitingConnection.filter(
+            unmatchedClientID => unmatchedClientID !== clientID
+        )
+    } else {
+        // case when matched player disconnected from the game
+        const opponentClientID = opponents[clientID];
+        clientConnections[opponentClientID].send(JSON.stringify({
+            method: 'left',
+            message: `Your opponent has left the game`,
+        }))
+    }
+}
+
+
 const normalizePort = (val) => {
-        const port = parseInt(val, 10);
-        if(isNaN(port)){
-            return val
-        }
-        if (port>=10) return port;
-        return false
+    const port = parseInt(val, 10);
+    if (isNaN(port)) {
+        return val
+    }
+    if (port >= 10) return port;
+    return false
 }
 const port = normalizePort(process.env.PORT || '3000');
 app.set('port', port);
-app.listen(port, () => console.log(`Server is listening on ${port}` ))
+app.listen(port, () => console.log(`Server is listening on ${port}`))
 

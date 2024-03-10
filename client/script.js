@@ -1,3 +1,13 @@
+// 
+// TODO: handle winning( add a winning animation/pop up with who won)
+// TODO: handle when opponent doesn't respond/disconnected
+// TODO: minimax algorithm for computer to play
+// TODO: READme file with gif
+// TODO: netlify deploy
+// TODO: check for console erros for icons
+
+
+
 let ws = new WebSocket('ws://localhost:8081');
 let symbol = null;
 let turn = null;
@@ -6,24 +16,41 @@ let cellsGrid = [
     '', '', '',
     '', '', '',
     '', '', ''
-]
+];
 
 const wsMsg = document.getElementById('wsMessage');
 const cells = document.querySelectorAll('.cell');
 const player = document.getElementById('player');
 const refresh = document.getElementById('refresh');
 
+
+
+const winningCombinations = [
+    // Rows
+    [0, 1, 2],
+    [3, 4, 5],
+    [6, 7, 8],
+
+    // Columns
+    [0, 3, 6],
+    [1, 4, 7],
+    [2, 5, 8],
+
+    // Diagonals
+    [0, 4, 8],
+    [2, 4, 6],
+];
 ws.onmessage = (message) => {
     const response = JSON.parse(message.data);
     if (response.method === 'welcome') {
-        // player.textContent = `player connected: ${response.connections}`
+        player.textContent = `player connected: ${response.connections}`
         wsMsg.textContent = response.message
     }
 
     if (response.method === 'join') {
         symbol = response.symbol;
         turn = response.turn;
-        player.textContent = `${response.symbol}`
+        player.innerHTML = `${response.symbol}`
         player.classList.add('controls')
         isGameActive = symbol === turn;
         updateMessage();
@@ -35,21 +62,30 @@ ws.onmessage = (message) => {
         updateMessage();
         updateGrid();
     }
-    if (response.method === 'result') {
+    if (response.method === 'win') {
+        cellsGrid = response.cellGrid
+        updateGrid();
+        isGameActive = false;
+    }
+    if (response.method === 'draw') {
         cellsGrid = response.cellGrid
         updateGrid();
         isGameActive = false;
         setTimeout(() => {
             wsMsg.textContent = response.message;
-            confirm(`${response.message} \n Would you like to play again?`) ? startOver() : '';
-        }, 300)
-        
+            showPopup(`${response.message}`, (result) => {
+                result ? startOver() : '';
+            })
+        }, 1000)
     }
     if (response.method === 'left') {
+        isGameActive = false;
         isGameActive = symbol === turn;
         setTimeout(() => {
-            wsMsg.textContent = response.message
-        }, 200)
+            showPopup(`${response.message}`, (result) => {
+                result ? startOver() : startOver();
+            });
+        }, 200);
     }
 }
 
@@ -59,10 +95,27 @@ function updateMessage() {
 
 function updateGrid() {
     cells.forEach((cell, index) => {
-        cell.classList.remove('X', 'O');
-        cellsGrid[index] !== '' && cell.classList.add(cellsGrid[index])
-    })
+        cell.classList.remove('X', 'O', 'winner');
+        cellsGrid[index] !== '' && cell.classList.add(cellsGrid[index]);
+
+        // Check if the current cell is part of any winning combination and add 'winner' class
+        const isWinner = winningCombinations.some(combination => combination.includes(index) && combination.every(cellIndex => cellsGrid[cellIndex] === cellsGrid[index]));
+        if (isWinner) {
+            cellsGrid[index] !== '' && cell.classList.add('winner');
+            if (cell.classList.contains('winner')) {
+                confetti()
+            } else {
+
+                setTimeout(() => {
+                    showPopup(`${response.message}`, (result) => {
+                        result ? startOver() : '';
+                    });
+                }, 100)
+            }
+        }
+    });
 }
+
 
 cells.forEach((cell, index) => {
     cell.addEventListener('click', (event) => {
@@ -84,8 +137,41 @@ function makeMove(cell, index) {
 
 }
 
+function showPopup(message, callback) {
+    const popup = document.createElement('div');
+    popup.classList.add('popup');
+    popup.textContent = message;
+
+    const buttons = document.createElement('span');
+    buttons.classList.add('buttons')
+    const cancelButton = document.createElement('button');
+    cancelButton.classList.add('button-cancel')
+    cancelButton.textContent = 'OK';
+    cancelButton.addEventListener('click', () => {
+        document.body.removeChild(popup);
+        callback(false);
+    });
+    buttons.appendChild(cancelButton);
+    popup.appendChild(buttons);
+
+    document.body.appendChild(popup);
+    // Remove the popup after 3000 milliseconds (3 seconds)
+    setTimeout(() => {
+        document.body.removeChild(popup);
+        callback(false); // Assuming you want to trigger the callback with false when auto-removal occurs
+    }, 3000);
+
+    popup.addEventListener('click', () => {
+        callback(true);
+        popup.remove();
+    });
+}
+
+
 function startOver() {
     window.location.reload();
 }
+
+
 
 refresh.addEventListener('click', startOver)

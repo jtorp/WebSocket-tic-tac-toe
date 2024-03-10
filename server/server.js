@@ -80,9 +80,10 @@ function handleMove(result, clientID) {
     if (checkForWin(result.cellGrid)) {
         [clientID, opponentClientID].forEach((cID) => {
             clientConnections[cID].send(JSON.stringify({
-                method: 'result',
-                message: `${result.symbol} won!`,
-                cellGrid: result.cellGrid
+                method: 'win',
+                message: `Game over. ${result.symbol} won!`,
+                cellGrid: result.cellGrid,
+                combinations: winningCombinations
             }))
         })
         return
@@ -90,8 +91,8 @@ function handleMove(result, clientID) {
     if (checkForDraw(result.cellGrid)) {
         [clientID, opponentClientID].forEach((cID) => {
             clientConnections[cID].send(JSON.stringify({
-                method: 'result',
-                message: `It's a draw!`,
+                method: 'draw',
+                message: `Game over. It's a draw!`,
                 cellGrid: result.cellGrid
             }))
         })
@@ -131,7 +132,7 @@ wss.on('connection', (connection) => {
     const startMsg = JSON.stringify({
         method: 'welcome',
         connections: wss.clients.size,
-        message: 'Searching opponent...'
+        message: 'Searching for an opponent...'
     })
     connection.send(startMsg)
     matchclients(clientID)
@@ -155,7 +156,7 @@ wss.on('connection', (connection) => {
 
 function closeClient(connection, clientID) {
     connection.close();
-    //find out which player disconnected
+    //find who disconnected
     const disconnectedClient = clientIDsWaitingConnection.some(
         unmatchedClientID => unmatchedClientID === clientID);
     //if true delete clientID from clientIDsWaitingConnection
@@ -168,7 +169,7 @@ function closeClient(connection, clientID) {
         const opponentClientID = opponents[clientID];
         clientConnections[opponentClientID].send(JSON.stringify({
             method: 'left',
-            message: `Your opponent has left the game`
+            message: `Your opponent has left the game.`
         }))
     }
 }

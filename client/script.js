@@ -1,7 +1,7 @@
-// 
-// TODO: handle winning( add a winning animation/pop up with who won)
+// TODO: handle winning popup separately
+// TODO: handle when draw
 // TODO: handle when opponent doesn't respond/disconnected
-// TODO: minimax algorithm for computer to play
+// TODO: minimax algorithm for computer to play with computer
 // TODO: READme file with gif
 // TODO: netlify deploy
 // TODO: check for console erros for icons
@@ -22,7 +22,7 @@ const wsMsg = document.getElementById('wsMessage');
 const cells = document.querySelectorAll('.cell');
 const player = document.getElementById('player');
 const refresh = document.getElementById('refresh');
-
+const grid = document.getElementById('grid');
 
 
 const winningCombinations = [
@@ -30,12 +30,10 @@ const winningCombinations = [
     [0, 1, 2],
     [3, 4, 5],
     [6, 7, 8],
-
     // Columns
     [0, 3, 6],
     [1, 4, 7],
     [2, 5, 8],
-
     // Diagonals
     [0, 4, 8],
     [2, 4, 6],
@@ -66,6 +64,12 @@ ws.onmessage = (message) => {
         cellsGrid = response.cellGrid
         updateGrid();
         isGameActive = false;
+        setTimeout(() => {
+            wsMsg.textContent = response.message;
+            showPopup(`${response.message}`, (result) => {
+                result ? startOver() : startOver();
+            })
+        }, 1000)
     }
     if (response.method === 'draw') {
         cellsGrid = response.cellGrid
@@ -103,14 +107,15 @@ function updateGrid() {
         if (isWinner) {
             cellsGrid[index] !== '' && cell.classList.add('winner');
             if (cell.classList.contains('winner')) {
-                confetti()
+                congrads()  
+                
             } else {
 
                 setTimeout(() => {
                     showPopup(`${response.message}`, (result) => {
                         result ? startOver() : '';
                     });
-                }, 100)
+                }, 500)
             }
         }
     });
@@ -172,6 +177,12 @@ function startOver() {
     window.location.reload();
 }
 
+const confettiColors = ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D', '#43AA8B', '#577590', '#1D3557', '#ffffff'];
+
+function congrads() {
+    confetti({particleCount: 200, spread: 400, gravity: 0,  origin: { y: 0.7 }, colors: confettiColors})
+   
+}
 
 
 refresh.addEventListener('click', startOver)

@@ -1,25 +1,22 @@
 /*
  TODO:
  check for ws close or timeout if the opponent doesn't respond
-
 */
 const colors = require('colors');
 const log = console.log;
 
 const winningCombinations = [
-    // Rows
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-
-    // Columns
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-
-    // Diagonals
-    [0, 4, 8],
-    [2, 4, 6],
+  // Rows
+  [0, 1, 2],
+  [3, 4, 5],
+  [6, 7, 8],
+  // Columns
+  [0, 3, 6],
+  [1, 4, 7],
+  [2, 5, 8],
+  // Diagonals
+  [0, 4, 8],
+  [2, 4, 6],
 ];
 
 const http = require('http');

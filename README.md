@@ -19,9 +19,9 @@ Play Tic Tac Toe online using WebSockets ❌⭕. Play with anyone, anywhere, in 
 
 
 ## Features
-[x] Real-time play with matched opponent 
-[x] Win & Draw animations
-[ ] 
+- [x] Real-time play with matched opponent 
+- [x] Win & Draw animations
+- [ ] Play with a computer 
 
 ## Contributions
 

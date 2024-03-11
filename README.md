@@ -3,19 +3,19 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="left">
-<h1>Tic-tac-toe over WS</h1>
+<h1>Tic-tac-toe + WS</h1>
 
 
 <br>
-Play Tic Tac Toe online using WebSockets ❌⭕. Play with anyone, anywhere, in real-time. Make your moves, and they'll see them instantly. It's just like playing together in the same room, but through your web browser📲
+Play Tic Tac Toe online using WebSockets ❌⭕. Play with anyone, anywhere, in real-time. Make your moves, and they'll see them instantly. It's just like playing together in the same room, but through your web browser🤳
  <br>
 
 ## Built With
 [![Node.js][Nodejs.com]][Nodejs-url]
 [![WebSocket]][WS-url]
-[![JS]][JS-url]
-[![HTML]][]
-
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
 
 
 ## Features
@@ -42,6 +42,7 @@ Feel free to submit pull requests, create issues or spread the word.
 [Nodejs-url]: https://nodejs.org
 [WebSocket]:https://img.shields.io/badge/Websockets-121011?style=for-the-badge&logoColor=white
 [WS-url]:https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
-[JS]: https://img.shields.io/badge/JavaScript-323330?style=for-the-badge&logo=javascript&logoColor=F7DF1E
+[JS]: https://img.shields.io/badge/JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=323330 
 [JS-url]:https://tc39.es/ecma262/
 [HTML]:https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white
+[html-url]:https://html.spec.whatwg.org/

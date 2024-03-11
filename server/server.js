@@ -1,7 +1,9 @@
 /*
  TODO:
  check for ws close or timeout if the opponent doesn't respond
+ TODO: pay computer mode
 */
+
 const colors = require('colors');
 const log = console.log;
 
@@ -146,9 +148,6 @@ wss.on('connection', (connection) => {
         log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size} `.bgRed);
         logConnectedClients();
     })
-
-
-
 })
 
 function closeClient(connection, clientID) {
@@ -166,7 +165,7 @@ function closeClient(connection, clientID) {
         const opponentClientID = opponents[clientID];
         clientConnections[opponentClientID].send(JSON.stringify({
             method: 'left',
-            message: `Your opponent has left the game.`
+            message: `Searching for an opponent...`
         }))
     }
 }

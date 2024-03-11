@@ -19,9 +19,9 @@ Play Tic Tac Toe online using WebSockets ❌⭕. Play with anyone, anywhere, in 
 
 
 ## Features
-- [x] Real-time play with matched opponent [Telegram Bot API 4.0](https://core.telegram.org/bots/api) 
-- [x] Win & Draw animations
-- [ ] 
+[x] Real-time play with matched opponent 
+[x] Win & Draw animations
+[ ] 
 
 ## Contributions
 
@@ -42,7 +42,3 @@ Feel free to submit pull requests, create issues or spread the word.
 [Nodejs-url]: https://nodejs.org
 [WebSocket]:https://img.shields.io/badge/Websockets-121011?style=for-the-badge&logoColor=white
 [WS-url]:https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
-[JS]: https://img.shields.io/badge/JavaScript-f7df1e?style=for-the-badge&logo=javascript&logoColor=323330 
-[JS-url]:https://tc39.es/ecma262/
-[HTML]:https://img.shields.io/badge/HTML-239120?style=for-the-badge&logo=html5&logoColor=white
-[html-url]:https://html.spec.whatwg.org/

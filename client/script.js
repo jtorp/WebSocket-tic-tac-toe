@@ -1,9 +1,7 @@
 // TODO: minimax algorithm for computer to play with computer
 // TODO: add gif to README
 
-
-
-let ws = new WebSocket('ws://localhost:8081');
+let ws = new WebSocket('ws://web-socket-tic-tac-toe.vercel.app/:8081');
 let symbol = null;
 let turn = null;
 let isGameActive = false;
@@ -116,12 +114,6 @@ function makeMove(cell, index) {
         'cellGrid': cellsGrid
     }));
 }
-
-function opponentMadeMove() {
-    // If the opponent made a move, clear the timeout
-    clearTimeout(opponentMoveTimeout);
-}
-
 function showPopup(message, callback) {
     const popup = document.createElement('div');
     popup.classList.add('popup');

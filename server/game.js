@@ -1,16 +1,20 @@
 const express = require('express');
 const game = express();
 const path = require('path');
+const cors = require('cors');
 
+game.use(cors(
+    {
+        origin: '*',
+        methods: ['GET', 'POST'],
+        credentials: true
+    }
+));
 game.use(express.static(path.join(__dirname, "..", "client")));
 
 game.get('/help', (req, res) => {
     const date = new Date().toString().trim(20)
-    const helpMsg = `<p>Check Internet Connection: Ensure that your device has a stable internet connection.
-    Restart the Game: Close and reopen the game to refresh the connection.
-    Update the App: Make sure you have the latest version of the Tic Tac Toe app installed.
-    Device Restart: Occasionally, restarting your device can help resolve connectivity issues.
-    Contact Support: If problems persist, reach out to the game's support team for assistance.} </p>`
+    const helpMsg = `<p>Players take turns putting their marks in empty squares. The first player to get 3 of her marks in a row (up, down, across, or diagonally) is the winner. When all 9 squares are full, the game is over. If no player has 3 marks in a row, the game ends in a tie </p>`
     res.send(`<main> ${date} ${helpMsg}
     </main>`);
 })

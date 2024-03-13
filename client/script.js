@@ -1,10 +1,5 @@
-// TODO: handle winning popup separately
-// TODO: handle when draw
-// TODO: handle when opponent doesn't respond/disconnected
 // TODO: minimax algorithm for computer to play with computer
-// TODO: READme file with gif
-// TODO: netlify deploy
-// TODO: check for console erros for icons
+// TODO: add gif to README
 
 
 
@@ -21,35 +16,19 @@ let cellsGrid = [
 const wsMsg = document.getElementById('wsMessage');
 const cells = document.querySelectorAll('.cell');
 const player = document.getElementById('player');
+const timer = document.getElementById('speed-mode-timer');
 const refresh = document.getElementById('refresh');
-const grid = document.getElementById('grid');
 
-
-const winningCombinations = [
-    // Rows
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    // Columns
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    // Diagonals
-    [0, 4, 8],
-    [2, 4, 6],
-];
 ws.onmessage = (message) => {
     const response = JSON.parse(message.data);
     if (response.method === 'welcome') {
-        player.textContent = `player connected: ${response.connections}`
         wsMsg.textContent = response.message
     }
 
     if (response.method === 'join') {
         symbol = response.symbol;
         turn = response.turn;
-        player.innerHTML = `${response.symbol}`
-        player.classList.add('controls')
+        wsMsg.innerHTML = `${response.symbol}`
         isGameActive = symbol === turn;
         updateMessage();
     }
@@ -63,33 +42,36 @@ ws.onmessage = (message) => {
     if (response.method === 'win') {
         cellsGrid = response.cellGrid
         updateGrid();
+        winAnimation();
         isGameActive = false;
+        wsMsg.textContent = response.message;
         setTimeout(() => {
-            wsMsg.textContent = response.message;
-            showPopup(`${response.message}`, (result) => {
-                result ? startOver() : startOver();
-            })
-        }, 1000)
+            showPopup(`${response.message}`, () => {
+                startOver();
+            }, 1000)
+        })
     }
     if (response.method === 'draw') {
         cellsGrid = response.cellGrid
         updateGrid();
+        drawAnimation();
         isGameActive = false;
+        wsMsg.textContent = response.message;
         setTimeout(() => {
-            wsMsg.textContent = response.message;
-            showPopup(`${response.message}`, (result) => {
-                result ? startOver() : '';
+            showPopup(`${response.message}`, () => {
+                startOver();
             })
         }, 1000)
+
     }
     if (response.method === 'left') {
         isGameActive = false;
         isGameActive = symbol === turn;
         setTimeout(() => {
-            showPopup(`${response.message}`, (result) => {
-                result ? startOver() : startOver();
+            showPopup(`${response.message}`, () => {
+                startOver();
             });
-        }, 200);
+        }, 1000);
     }
 }
 
@@ -101,26 +83,20 @@ function updateGrid() {
     cells.forEach((cell, index) => {
         cell.classList.remove('X', 'O', 'winner');
         cellsGrid[index] !== '' && cell.classList.add(cellsGrid[index]);
-
-        // Check if the current cell is part of any winning combination and add 'winner' class
-        const isWinner = winningCombinations.some(combination => combination.includes(index) && combination.every(cellIndex => cellsGrid[cellIndex] === cellsGrid[index]));
-        if (isWinner) {
-            cellsGrid[index] !== '' && cell.classList.add('winner');
-            if (cell.classList.contains('winner')) {
-                congrads()  
-                
-            } else {
-
-                setTimeout(() => {
-                    showPopup(`${response.message}`, (result) => {
-                        result ? startOver() : '';
-                    });
-                }, 500)
-            }
-        }
+      
     });
 }
-
+function drawAnimation(){
+    cells.forEach((cell) => {
+        cell.classList.add('draw');
+    })
+}
+function winAnimation(){
+    cells.forEach((cell) => {
+        cell.classList.add('winner');
+    })
+    congrads()
+}
 
 cells.forEach((cell, index) => {
     cell.addEventListener('click', (event) => {
@@ -138,8 +114,12 @@ function makeMove(cell, index) {
         'method': 'move',
         'symbol': symbol,
         'cellGrid': cellsGrid
-    }))
+    }));
+}
 
+function opponentMadeMove() {
+    // If the opponent made a move, clear the timeout
+    clearTimeout(opponentMoveTimeout);
 }
 
 function showPopup(message, callback) {
@@ -148,30 +128,23 @@ function showPopup(message, callback) {
     popup.textContent = message;
 
     const buttons = document.createElement('span');
-    buttons.classList.add('buttons')
-    const cancelButton = document.createElement('button');
-    cancelButton.classList.add('button-cancel')
-    cancelButton.textContent = 'OK';
-    cancelButton.addEventListener('click', () => {
+    buttons.classList.add('buttons');
+    const okButton = document.createElement('button');
+    okButton.classList.add('button-ok');
+    okButton.textContent = 'OK';
+    okButton.addEventListener('click', () => {
         document.body.removeChild(popup);
-        callback(false);
+        if (callback) callback(false);
     });
-    buttons.appendChild(cancelButton);
+    buttons.appendChild(okButton);
     popup.appendChild(buttons);
 
     document.body.appendChild(popup);
-    // Remove the popup after 3000 milliseconds (3 seconds)
-    setTimeout(() => {
-        document.body.removeChild(popup);
-        callback(false); // Assuming you want to trigger the callback with false when auto-removal occurs
-    }, 3000);
-
     popup.addEventListener('click', () => {
-        callback(true);
+        if (callback) callback(true);
         popup.remove();
     });
 }
-
 
 function startOver() {
     window.location.reload();
@@ -180,9 +153,8 @@ function startOver() {
 const confettiColors = ['#F94144', '#F3722C', '#F8961E', '#F9C74F', '#90BE6D', '#43AA8B', '#577590', '#1D3557', '#ffffff'];
 
 function congrads() {
-    confetti({particleCount: 200, spread: 400, gravity: 0,  origin: { y: 0.7 }, colors: confettiColors})
-   
-}
+    confetti({ particleCount: 200, spread: 400, gravity: 0, origin: { y: 0.7 }, colors: confettiColors })    
 
+}
 
 refresh.addEventListener('click', startOver)

@@ -4,7 +4,7 @@
   "description": "Tic Tac Toe game server",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon server.js",
+    "start": "nodemon server.js"
   },
   "keywords": [],
   "author": "",

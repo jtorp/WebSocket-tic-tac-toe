@@ -1,7 +1,7 @@
 // TODO: minimax algorithm for computer to play with computer
 // TODO: add gif to README
 
-let ws = new WebSocket('ws://web-socket-tic-tac-toe.vercel.app/:8081');
+let ws = new WebSocket('wss://web-socket-tic-tac-toe.vercel.app/:8081');
 let symbol = null;
 let turn = null;
 let isGameActive = false;

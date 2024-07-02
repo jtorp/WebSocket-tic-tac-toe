@@ -5,7 +5,7 @@ const cors = require('cors');
 
 game.use(cors(
     {
-        origin: 'https://web-socket-tic-tac-toe-oh4d.vercel.app',
+        origin: 'https://web-socket-tic-tac-toe.vercel.app/',
         methods: ['GET', 'POST'],
         credentials: true
     }

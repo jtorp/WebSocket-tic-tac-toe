@@ -1,8 +1,3 @@
-/*
- TODO:
- check for ws close or timeout if the opponent doesn't respond
- TODO: pay computer mode
-*/
 
 const colors = require('colors');
 const log = console.log;

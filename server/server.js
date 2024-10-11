@@ -3,15 +3,15 @@ const colors = require('colors');
 const log = console.log;
 
 const winningCombinations = [
-  // Rows
+  
   [0, 1, 2],
   [3, 4, 5],
   [6, 7, 8],
-  // Columns
+
   [0, 3, 6],
   [1, 4, 7],
   [2, 5, 8],
-  // Diagonals
+
   [0, 4, 8],
   [2, 4, 6],
 ];
@@ -21,9 +21,7 @@ const WebSocket = require('ws');
 const app = require('./game');
 const httpServer = http.createServer();
 const wss = new WebSocket.Server({ server: httpServer, clientTracking: true });
-httpServer.listen(8081, () => {
-    console.log('HTTP Server listening on port 8081');
-});
+
 
 
 let clientIDCounter = 0;
@@ -36,13 +34,10 @@ wss.on('error', (error) => {
     console.error('Server Error:', error);
 });
 function logConnectedClients() {
-    log('Currently connected clients:'.bgBlue);
     wss.clients.forEach((client) => {
-        console.log(`Client ID: ${client._socket.remoteAddress}`.bgBlue);
+        console.log(`Client ID: ${client._socket.remoteAddress}`);
     });
 }
-
-
 
 function matchclients(clientID) {
     clientIDsWaitingConnection.push(clientID)
@@ -119,8 +114,8 @@ function checkForDraw(cellGrid) {
 wss.on('connection', (connection) => {
     const clientID = createClientID();
     //const clientID = connection._socket.remoteAddress;
+    console.log(`Client ${clientID} connected. Total connected clients: ${wss.clients.size}`);
     clientConnections[clientID] = connection;
-    //connection sends message to client console.log(`New client connected. Total connected clients: ${wss.clients.size}`);
     logConnectedClients();
 
     const startMsg = JSON.stringify({
@@ -131,7 +126,6 @@ wss.on('connection', (connection) => {
     connection.send(startMsg)
     matchclients(clientID)
 
-    //connection receives message from client
     connection.on('message', (message) => {
         const result = JSON.parse(message)
         if (result.method === 'move') {
@@ -140,7 +134,7 @@ wss.on('connection', (connection) => {
     })
     connection.on('close', () => {
         closeClient(connection, clientID)
-        log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size} `.bgRed);
+        log(`Client ${clientID} disconnected. Total connected clients: ${wss.clients.size} `);
         logConnectedClients();
     })
 })

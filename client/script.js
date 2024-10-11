@@ -1,6 +1,6 @@
-// TODO: EB server
-// TODO: add gif to README
-const websocketUrl = process.env.REACT_APP_WEBSOCKET_URL;
+
+const websocketUrl =
+  "https://buttery-wise-octagon.glitch.me/" || "ws://localhost:8081";
 
 let ws = new WebSocket(websocketUrl);
 let symbol = null;
@@ -11,7 +11,6 @@ let cellsGrid = ["", "", "", "", "", "", "", "", ""];
 const wsMsg = document.getElementById("wsMessage");
 const cells = document.querySelectorAll(".cell");
 const player = document.getElementById("player");
-const timer = document.getElementById("speed-mode-timer");
 const refresh = document.getElementById("refresh");
 
 ws.onmessage = (message) => {
@@ -46,7 +45,7 @@ ws.onmessage = (message) => {
         () => {
           startOver();
         },
-        1000
+        1500
       );
     });
   }
@@ -60,7 +59,7 @@ ws.onmessage = (message) => {
       showPopup(`${response.message}`, () => {
         startOver();
       });
-    }, 1000);
+    }, 1500);
   }
   if (response.method === "left") {
     isGameActive = false;
@@ -69,7 +68,7 @@ ws.onmessage = (message) => {
       showPopup(`${response.message}`, () => {
         startOver();
       });
-    }, 1000);
+    }, 1500);
   }
 };
 
@@ -166,3 +165,4 @@ function congrads() {
 }
 
 refresh.addEventListener("click", startOver);
+

@@ -1,6 +1,5 @@
-
 const websocketUrl =
-  "https://buttery-wise-octagon.glitch.me/" || "ws://localhost:8081";
+  "wss://buttery-wise-octagon.glitch.me/";
 
 let ws = new WebSocket(websocketUrl);
 let symbol = null;
@@ -165,4 +164,3 @@ function congrads() {
 }
 
 refresh.addEventListener("click", startOver);
-

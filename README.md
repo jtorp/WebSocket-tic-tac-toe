@@ -42,3 +42,26 @@ Feel free to submit pull requests, create issues or spread the word.
 [Nodejs-url]: https://nodejs.org
 [WebSocket]:https://img.shields.io/badge/Websockets-121011?style=for-the-badge&logoColor=white
 [WS-url]:https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
+Made this on the plane 
+Play Tic ❌ Tac ⭕ Toe online using WebSockets. Play with anyone, anywhere, in real-time. Make your moves, and they'll see them instantly. It's just like playing together in the same room, but through your web browser🤳
+ <br>
+
+## Built With
+[![Node.js][Nodejs.com]][Nodejs-url]
+[![WebSocket]][WS-url]
+![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+
+
+## Features
+- [x] Real-time play with matched opponent 
+- [x] Win & Draw animations
+
+
+# How to Install
+
+> If you just want to try out the app, it's live on [this](https://chattyui.com) website.
+>
+> This is a Next.js application and requires Node.js (18+) and npm installed to run the project locally.
+

@@ -1,67 +1,44 @@
-<a name="readme-top"></a>
-
-<!-- PROJECT LOGO -->
-<br />
-<div align="left">
-<h1>Tic-tac-toe + WS</h1>
-
-
-<br>
-Play Tic Tac Toe online using WebSockets ❌⭕. Play with anyone, anywhere, in real-time. Make your moves, and they'll see them instantly. It's just like playing together in the same room, but through your web browser🤳
- <br>
+# [TicTacToe🤳](https://)
+Lightweight **raw** control of real-time multiplayer game using WebSockets. It matches two clients, assigns symbols (X and O), and handles turn-based gameplay. The server tracks player moves, checks for win/draw conditions, and notifies players. 
+> If you just want to try out the app, it's live on [this](https://) website.
 
 ## Built With
-[![Node.js][Nodejs.com]][Nodejs-url]
-[![WebSocket]][WS-url]
+
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
+![WebSocket](https://img.shields.io/badge/WebSocket-0080FF?style=for-the-badge&logo=websocket&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
 ![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
 ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+## Install from source
 
+_Easily set up a local development environment!_
 
-## Features
-- [x] Real-time play with matched opponent 
-- [x] Win & Draw animations
-- [ ] Play with a computer 
+To run locally requires Node.js (18+) and npm installed to run.
 
-## Contributions
+If you want to setup and run the project locally, follow the steps below:
 
-Feel free to submit pull requests, create issues or spread the word.
+**1. Clone the repository to a directory on your pc via command prompt:**
 
-## License
+```
+git clone https://github.com/jtorp/WebSocket-tic-tac-toe.git
+```
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+**2. Open the folder:**
 
+```
+cd server 
+```
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+**3. Install dependencies:**
 
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
+```
+npm install
+```
 
+**4. Start the development server:**
 
-[Nodejs.com]:https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white
-[Nodejs-url]: https://nodejs.org
-[WebSocket]:https://img.shields.io/badge/Websockets-121011?style=for-the-badge&logoColor=white
-[WS-url]:https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
-Made this on the plane 
-Play Tic ❌ Tac ⭕ Toe online using WebSockets. Play with anyone, anywhere, in real-time. Make your moves, and they'll see them instantly. It's just like playing together in the same room, but through your web browser🤳
- <br>
+```
+npm start server.js
+```
 
-## Built With
-[![Node.js][Nodejs.com]][Nodejs-url]
-[![WebSocket]][WS-url]
-![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-
-
-## Features
-- [x] Real-time play with matched opponent 
-- [x] Win & Draw animations
-
-
-# How to Install
-
-> If you just want to try out the app, it's live on [this](https://chattyui.com) website.
->
-> This is a Next.js application and requires Node.js (18+) and npm installed to run the project locally.
-
+**Start coding!** 🎉

@@ -1,7 +1,12 @@
 const websocketUrl =
   "wss://buttery-wise-octagon.glitch.me/";
 
-let ws = new WebSocket(websocketUrl);
+let ws = new WebSocket(websocketUrl, {
+  headers: {
+   // "Access-Control-Allow-Origin": "https://faithful-arrow-cadet.glitch.me/",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36",
+  },
+});
 let symbol = null;
 let turn = null;
 let isGameActive = false;

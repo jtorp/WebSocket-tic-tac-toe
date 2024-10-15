@@ -55,7 +55,7 @@ Make sure you have [Node.js](https://nodejs.org/) (version 18 or higher) and npm
 
 3. **Update port confguration for local development:**
 
-In server.js, make sure the WebSocket and HTTP servers are listening on appropriate ports. 
+Make sure the WebSocket and HTTP servers are listening on appropriate ports. 
    ```javascript
 const wss = new WebSocket.Server({ server: httpServer });
 httpServer.listen(8080); 

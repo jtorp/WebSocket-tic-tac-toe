@@ -1,6 +1,4 @@
-//const ws = new WebSocket("wss://acute-ossified-utensil.glitch.me/");
-const ws = new WebSocket("ws://localhost:8080/" || "ws://192.168.0.204:3000"); ;
-
+const ws = new WebSocket("wss://acute-ossified-utensil.glitch.me/");
 const message = document.getElementById("message");
 const cellsElements = document.querySelectorAll(".cell");
 const resetButton = document.querySelector(".button-reset");

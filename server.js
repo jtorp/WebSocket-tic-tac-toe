@@ -6,7 +6,6 @@ const app = express();
 app.use(express.static(path.join(__dirname, "client")));
 const httpServer = http.createServer(app);
 const wss = new WebSocket.Server({ server: httpServer });
-httpServer.listen(8080);
 
 const clientConnections = {};
 const opponents = {};
@@ -74,50 +73,6 @@ function matchClients(clientId) {
     })
   );
 }
-
-// function moveHandler_old(result, clientId) {
-//   const opponentClientId = opponents[clientId];
-
-//   //if (checkWin(result.field)) {
-//   const winningCombo = checkWin(result.field);
-
-//   if (winningCombo) {
-//     [clientId, opponentClientId].forEach((cId) => {
-//       clientConnections[cId].send(
-//         JSON.stringify({
-//           method: "result",
-//           message: `${result.symbol} wins!`,
-//           field: result.field,
-//           winningCombo: winningCombo,
-//         })
-//       );
-//     });
-//     return;
-//   }
-
-//   if (checkDraw(result.field)) {
-//     [clientId, opponentClientId].forEach((cId) => {
-//       clientConnections[cId].send(
-//         JSON.stringify({
-//           method: "result",
-//           message: "Draw",
-//           field: result.field,
-//         })
-//       );
-//     });
-//     return;
-//   }
-
-//   [clientId, opponentClientId].forEach((cId) => {
-//     clientConnections[cId].send(
-//       JSON.stringify({
-//         method: "update",
-//         turn: result.symbol === "X" ? "O" : "X",
-//         field: result.field,
-//       })
-//     );
-//   });
-// }
 
 function moveHandler(result, clientId) {
   const opponentClientId = opponents[clientId];

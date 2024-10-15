@@ -1,44 +1,84 @@
-# [TicTacToe🤳](https://)
-Lightweight **raw** control of real-time multiplayer game using WebSockets. It matches two clients, assigns symbols (X and O), and handles turn-based gameplay. The server tracks player moves, checks for win/draw conditions, and notifies players. 
-> If you just want to try out the app, it's live on [this](https://) website.
+# [Tic-Tac-Toe 🔗](https://acute-ossified-utensil.glitch.me/)
+
+This pet project is a real-time, multiplayer game built using Node.js and lightweight WebSockets. It connects two players, assigns X and O, and lets them play the classic 3x3 grid tic-tac-toe.
+
+#### [Try the live demo](https://acute-ossified-utensil.glitch.me/)
+
+> 
+>  Open two browser tabs and test the multiplayer feature by playing against yourself.
+> 
+>  Share the link with a friend to play against each other in real-time.
+>
 
 ## Built With
 
-![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)
-![WebSocket](https://img.shields.io/badge/WebSocket-0080FF?style=for-the-badge&logo=websocket&logoColor=white)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=node.js&logoColor=white)  
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)  
+![WebSocket](https://img.shields.io/badge/WebSocket-0080FF?style=for-the-badge&logo=websocket&logoColor=white)  
 ![JavaScript](https://img.shields.io/badge/javascript-%23323330.svg?style=for-the-badge&logo=javascript&logoColor=%23F7DF1E)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=for-the-badge&logo=html5&logoColor=white)
-![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
-## Install from source
 
-_Easily set up a local development environment!_
+## What's in this project?
 
-To run locally requires Node.js (18+) and npm installed to run.
+- **`client/`**: Holds the basic HTML page, styling, and the script for managing game logic on the client side.
+- **`server.js`**: The main server script that handles WebSocket connections and game state.
 
-If you want to setup and run the project locally, follow the steps below:
+### Features
 
-**1. Clone the repository to a directory on your pc via command prompt:**
+- [x] Real-time multiplayer support using WebSocket.
+- [x] Players are automatically assigned the symbols "X" or "O".
+- [x] Detects win conditions and handles game resets.
+- [x] Displays messages and popup 💬 for wins and draws.
+
+### Roadmap
+
+- [ ] Play against an AI opponent (Minimax) 🤖.
+- [ ] Implement automatic reconnection, fallbacks (e.g., to HTTP long-polling) 🔌 or simply use higher-level library _Socket.io_.
+
+## Installation
+
+You can set up the project locally and run the server by following the steps below.
+
+### Prerequisites
+
+Make sure you have [Node.js](https://nodejs.org/) (version 18 or higher) and npm installed on your machine.
+
+### Steps
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/jtorp/WebSocket-tic-tac-toe.git
+
+2. **Install dependancies:**
+
+   ```bash
+   npm install
+
+3. **Update port confguration for local development:**
+
+In server.js, make sure the WebSocket and HTTP servers are listening on appropriate ports. 
+   ```javascript
+const wss = new WebSocket.Server({ server: httpServer });
+httpServer.listen(8080); 
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Express app listening on ${PORT}`);
+});
+
+   ```
+4. **Start both the WebSocket and Express app server:**
 
 ```
-git clone https://github.com/jtorp/WebSocket-tic-tac-toe.git
+npm run start 
 ```
+5. **Test in your browser:**
 
-**2. Open the folder:**
+Open two tabs on http://localhost:3000 to simulate a multiplayer game locally.
 
-```
-cd server 
-```
+## Deploying
 
-**3. Install dependencies:**
+Here are some options for deployment:
 
-```
-npm install
-```
-
-**4. Start the development server:**
-
-```
-npm start server.js
-```
-
-**Start coding!** 🎉
+- **Vercel**: [Using Express with Vercel](https://vercel.com/guides/using-express-with-vercel)
+- **Heroku**: [Deploying Node.js applications](https://devcenter.heroku.com/articles/deploying-nodejs)
+- **Glitch**: I used [Glitch](https://glitch.com) with free 1000 hours.
